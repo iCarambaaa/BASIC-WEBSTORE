@@ -17,7 +17,7 @@
 <!-- NAVBAR -->
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Strivazon</a>
+    <a class="navbar-brand" href="./index.html">Strivazon</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -37,70 +37,60 @@
     <h1>Welcome to Strivazon XD</h1>
 </div>
 <div class="container-fluid">
-  <div class="row">
+  <div id="itGoesInsideHere" class="row d-flex container-fluid justify-content-center">
 
 
   </div>
 </div>
 
+ <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 
 
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
-  crossorigin="anonymous"></script>
 <script>
 
-  function createElement(_data) {
-      let rowNode = document.getElementsByClassName('row')[0]
-      let elementNode = document.createElement('div')
-      elementNode.classList.add('col-4')
-      elementNode.innerHTML = `
-      
-          <div class="bg-light me-md-3 pt-3 px-3 pt-md-5 px-md-5 text-center overflow-hidden">
-              <div class="my-3 p-3">
-                <h2 class="display-5">${_data.name}</h2>
-              
-                <p class="lead">${_data.description}</p>
-                <p class="lead">${_data.brand}</p>
-                <p class="lead">${_data.price}</p>
-   
-              </div>
-              <div class="bg-body shadow-sm mx-auto" style="width: 80%; height: 300px; border-radius: 21px 21px 0 0;">
-                  <img src="${_data.imageUrl}" class="img-fluid">
-                  
-                  </div>
+let url = "https://striveschool-api.herokuapp.com/api/product/"
+let myHeaders = new Headers()
+myHeaders.append('Content-Type', 'application/json')
+myHeaders.append('Authorization', "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTRiMzUyNjRiYjUzZDAwMTViMWEwMzQiLCJpYXQiOjE2MzIzMTg3NTgsImV4cCI6MTYzMzUyODM1OH0.-KaV6cAY0zF2Bo26q8xvwA0xYrtkSTfOKp8E2Ia43Hs")
+
+// console.log(myHeaders.get('Authorization'))
+
+let myInit = {
+    method: "GET",
+    headers: myHeaders
+}
+
+ function showProducts() {
+
+    fetch(url, myInit)
+    .then(response => response.json())
+    .then(result => {
+      // console.log(result)
+      let row = document.getElementById("itGoesInsideHere")
+          result.forEach(element => {
+            
+            row.innerHTML += `
+            <div class="card m-2 col p-2" style="min-width: 15rem; max-width: 20rem">
+              <img src="${element.imageUrl}" class="card-img-top" alt="${element.name}">
+                <div class="card-body">
+                  <h5 class="card-title">${element.name}</h5>
+                  <p class="card-text"><small>${element.brand}</small></p>
+                  <p class="card-text">${element.description}</p>
+                  <p class="card-text">$${element.price}</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
             </div>
-      
-      `
-      rowNode.appendChild(elementNode)
+            `
+          });})
+    .catch(error => console.log('error', error));
+ }
 
+window.onload = () => {
+  showProducts()
+}
 
-  }
-
-
-
-
-  function getData() {
-      fetch("https://striveschool-api.herokuapp.com/api/product/", {
-          headers: {
-              "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTRiMzUyNjRiYjUzZDAwMTViMWEwMzQiLCJpYXQiOjE2MzIzMTg3NTgsImV4cCI6MTYzMzUyODM1OH0.-KaV6cAY0zF2Bo26q8xvwA0xYrtkSTfOKp8E2Ia43Hs"
-          }
-      })
-          .then(response => { return response.json()})
-          .then(data => {
-
-              data.forEach(element => {
-                  createElement(element)
-              })
-          })
-  }
-
-  window.onload = function () {
-      getData()
-  }
 
 </script>
 
